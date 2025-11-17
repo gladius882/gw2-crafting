@@ -3,4 +3,7 @@ export interface Item {
     name: string
     items: number[]
     order: number
+    rarity_id: number
+    chat_link?: string
+    icon?: string
 }
