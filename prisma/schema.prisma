@@ -25,4 +25,20 @@ model Rarity {
   name String @unique
   min_level Int?
   max_level Int?
+
+  items Item[]
+}
+
+model Item {
+  id Int @id @default(autoincrement())
+  name String @unique
+  type String
+  level Int @default(0)
+
+  vendor_value Int @default(0)
+  chat_link String?
+  icon String?
+
+  rarity_id Int
+  rarity Rarity @relation(fields: [rarity_id], references: [id])
 }
