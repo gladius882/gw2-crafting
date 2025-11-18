@@ -6,5 +6,8 @@ export async function gw2fetch(endpoint: string) {
         }
     })
         .then(data => data.json())
-        .catch(() => false)
+        .catch((err) => {
+            console.log(err);
+            return false;
+        })
 }
