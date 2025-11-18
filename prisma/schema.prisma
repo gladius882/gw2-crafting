@@ -43,3 +43,27 @@ model Item {
   rarity_id Int
   rarity Rarity @relation(fields: [rarity_id], references: [id])
 }
+
+model Discipline {
+  id Int @id @default(autoincrement())
+  name String
+}
+
+// model Recipe {
+//   id Int @id @default(autoincrement())
+//   type String
+
+//   output_item_count Int
+//   output_item_id Int
+
+//   time_to_craft Int @default(1000)
+  
+//   min_rating Int
+//   chat_link String?
+// }
+
+// model RecipeIngredient {
+//   id Int @id @default(autoincrement())
+//   recipe_id Int
+//   item_id Int
+// }
