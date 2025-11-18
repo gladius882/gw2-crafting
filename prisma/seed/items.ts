@@ -30,7 +30,7 @@ async function main() {
         }
 
         const result = await prisma.item.upsert({
-            where: { name: gw2Item.name },
+            where: { gw2_id: gw2Item.id },
             update: {},
             create: {
                 name: gw2Item.name,
@@ -40,7 +40,8 @@ async function main() {
                 vendor_value: gw2Item.vendor_value,
                 icon: gw2Item.icon,
                 chat_link: gw2Item.chat_link,
-                level: gw2Item.level
+                level: gw2Item.level,
+                gw2_id: gw2Item.id
             }
         })
 
