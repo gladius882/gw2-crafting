@@ -14,10 +14,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Material {
+model BankMaterial {
   id    Int    @id @default(autoincrement())
-  name  String
-  order Int?
+  item_id Int
+  count Int @default(0)
+
+  item Item @relation(fields: [item_id], references: [id])
 }
 
 model Rarity {
@@ -51,6 +53,7 @@ model Item {
 
   recipes     Recipe[] // Receptury, które tworzą ten item
   ingredients RecipeIngredient[] // Receptury, w których ten item jest składnikiem
+  bank        BankMaterial[]
 }
 
 model Recipe {
