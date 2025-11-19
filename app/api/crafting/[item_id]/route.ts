@@ -13,7 +13,7 @@ export const GET = async (req: NextRequest, ctx: Context) => {
     const prisma = new PrismaClient();
 
     const recipe = await prisma.recipe.findFirst({
-        where: { id: ctx.params.item_id },
+        where: { output_item_id: ctx.params.item_id },
         include: {
             disciplines: {
                 include: {
@@ -32,13 +32,15 @@ export const GET = async (req: NextRequest, ctx: Context) => {
     return NextResponse.json({
         output_item: {
             ...recipe?.output_item,
-            count: recipe?.output_item_count
+            count: recipe?.output_item_count,
+            min_rating: recipe?.min_rating
         },
         ingredients: recipe?.ingredients.map(ingredient => {
             return {
                 ...ingredient.item,
                 count: ingredient.count,
             }
-        })
+        }),
+        disciplines: recipe?.disciplines.map(d => d.discipline.name)
     })
 }
