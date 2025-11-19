@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Account" ALTER COLUMN "gw2_id" SET DATA TYPE TEXT;

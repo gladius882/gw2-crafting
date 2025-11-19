@@ -94,7 +94,7 @@ model RecipeDiscipline {
 
 model Account {
   id Int @id @default(autoincrement())
-  gw2_id Int @unique
+  gw2_id String @unique
   age Int @default(0)
   world Int?
   fractal_level Int?
