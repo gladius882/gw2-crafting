@@ -102,3 +102,22 @@ model Account {
   monthly_ap Int @default(0)
   wvw_rank Int @default(1)
 }
+
+model Race {
+  id Int @id @default(autoincrement())
+  name String @unique
+
+  characters Character[]
+}
+
+model Character {
+  id Int @id @default(autoincrement())
+  name String @unique
+  level Int @default(1)
+  age Int?
+  deaths Int @default(0)
+  race_id Int
+  gender String
+
+  race Race @relation(fields: [race_id], references: [id])
+}
