@@ -69,7 +69,6 @@ model Recipe {
 }
 
 model RecipeIngredient {
-  @@id([recipe_id, item_id])
 
   recipe_id Int
   recipe    Recipe @relation(fields: [recipe_id], references: [id])
@@ -78,14 +77,28 @@ model RecipeIngredient {
   item    Item @relation(fields: [item_id], references: [id])
 
   count Int
+
+  @@id([recipe_id, item_id])
 }
 
 model RecipeDiscipline {
-  @@id([recipe_id, discipline_id])
 
   recipe_id Int
   recipe    Recipe @relation(fields: [recipe_id], references: [id])
 
   discipline_id Int
   discipline    Discipline @relation(fields: [discipline_id], references: [id])
+
+  @@id([recipe_id, discipline_id])
+}
+
+model Account {
+  id Int @id @default(autoincrement())
+  gw2_id Int @unique
+  age Int @default(0)
+  world Int?
+  fractal_level Int?
+  daily_ap Int @default(0)
+  monthly_ap Int @default(0)
+  wvw_rank Int @default(1)
 }
