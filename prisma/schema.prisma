@@ -32,6 +32,8 @@ model Rarity {
 model Discipline {
   id   Int    @id @default(autoincrement())
   name String @unique
+
+  recipes RecipeDiscipline[]
 }
 
 model Item {
@@ -60,12 +62,14 @@ model Recipe {
   time_to_craft     Int     @default(1000)
   min_rating        Int
   chat_link         String?
+  gw2_id            Int     @unique
 
   ingredients RecipeIngredient[]
+  disciplines RecipeDiscipline[]
 }
 
 model RecipeIngredient {
-  id Int @id @default(autoincrement())
+  @@id([recipe_id, item_id])
 
   recipe_id Int
   recipe    Recipe @relation(fields: [recipe_id], references: [id])
@@ -74,4 +78,14 @@ model RecipeIngredient {
   item    Item @relation(fields: [item_id], references: [id])
 
   count Int
+}
+
+model RecipeDiscipline {
+  @@id([recipe_id, discipline_id])
+
+  recipe_id Int
+  recipe    Recipe @relation(fields: [recipe_id], references: [id])
+
+  discipline_id Int
+  discipline    Discipline @relation(fields: [discipline_id], references: [id])
 }
