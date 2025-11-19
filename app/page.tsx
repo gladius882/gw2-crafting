@@ -1,8 +1,6 @@
 "use server"
 
-import { getItem, listItems } from "@/lib/items";
-import { getBankMaterials, getMaterial, listMaterialIds } from "@/lib/materials";
-import { listRecipes } from "@/lib/recipes";
+import { getBankMaterials } from "@/lib/materials";
 import Image from "next/image";
 
 export default async function Home() {
@@ -11,12 +9,13 @@ export default async function Home() {
 
 
   return (
-    <div className="grid grid-cols-10 gap-3">
+    <div className="grid grid-cols-5 gap-3">
 
       {bank.map(b => {
         return (
-          <div key={b.id} className="shadow-white shadow text-center flex flex-col items-center justify-center p-2">
-            <Image src={b.item.icon} alt="test" width={50} height={50} />
+          <div key={b.id} className="shadow-white shadow text-center flex flex-col items-center justify-center p-1">
+            <Image src={b.item.icon} alt="test" width={70} height={70} className="border border-gray" />
+            <div>{b.item.name}</div>
             <div>{b.count}</div>
           </div>
         )
