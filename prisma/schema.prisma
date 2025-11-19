@@ -15,55 +15,51 @@ datasource db {
 }
 
 model Material {
-  id Int @id @default(autoincrement())
-  name String
+  id    Int    @id @default(autoincrement())
+  name  String
   order Int?
 }
 
 model Rarity {
-  id Int @id @default(autoincrement())
-  name String @unique
+  id        Int    @id @default(autoincrement())
+  name      String @unique
   min_level Int?
   max_level Int?
 
   items Item[]
 }
 
-model Item {
-  id Int @id @default(autoincrement())
-  name String
-  type String
-  level Int @default(0)
-
-  vendor_value Int @default(0)
-  chat_link String?
-  icon String?
-  gw2_id Int @unique
-
-  rarity_id Int
-  rarity Rarity @relation(fields: [rarity_id], references: [id])
-
-  recipes Recipe[]
-  recipe_ingredients RecipeIngredient[]
-}
-
 model Discipline {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
   name String @unique
 }
 
+model Item {
+  id           Int     @id @default(autoincrement())
+  name         String
+  type         String
+  level        Int     @default(0)
+  vendor_value Int     @default(0)
+  chat_link    String?
+  icon         String?
+  gw2_id       Int     @unique
+
+  rarity_id Int
+  rarity    Rarity @relation(fields: [rarity_id], references: [id])
+
+  recipes     Recipe[] // Receptury, które tworzą ten item
+  ingredients RecipeIngredient[] // Receptury, w których ten item jest składnikiem
+}
+
 model Recipe {
-  id Int @id @default(autoincrement())
-  type String
-
+  id                Int     @id @default(autoincrement())
+  type              String
   output_item_count Int
-  output_item_id Int
-  output_item Item @relation(fields: [output_item_id], references: [id])
-
-  time_to_craft Int @default(1000)
-  
-  min_rating Int
-  chat_link String?
+  output_item_id    Int
+  output_item       Item    @relation(fields: [output_item_id], references: [id])
+  time_to_craft     Int     @default(1000)
+  min_rating        Int
+  chat_link         String?
 
   ingredients RecipeIngredient[]
 }
@@ -72,10 +68,10 @@ model RecipeIngredient {
   id Int @id @default(autoincrement())
 
   recipe_id Int
-  recipe Recipe @relation(fields: [recipe_id], references: [id])
+  recipe    Recipe @relation(fields: [recipe_id], references: [id])
 
   item_id Int
-  item Item @relation(fields: [item_id], references: [id])
+  item    Item @relation(fields: [item_id], references: [id])
 
-  item_quantity Int @default(1)
+  count Int
 }
