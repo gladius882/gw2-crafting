@@ -4,7 +4,7 @@ import { listMaterials } from "@/lib/account";
 
 const prisma = new PrismaClient();
 
-async function main() {
+export async function seedMaterials() {
 
     const materials = await listMaterials();
 
@@ -38,7 +38,7 @@ async function main() {
 
 }
 
-main()
+seedMaterials()
     .then(() => console.log('success'))
     .catch(console.log)
     .finally(() => prisma.$disconnect)
