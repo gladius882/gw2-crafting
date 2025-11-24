@@ -22,6 +22,14 @@ model BankMaterial {
   item Item @relation(fields: [item_id], references: [id])
 }
 
+model BankItem {
+  id Int @id @default(autoincrement())
+  item_id Int @unique
+  count Int @default(0)
+
+  item Item @relation(fields: [item_id], references: [id])
+}
+
 model Rarity {
   id        Int    @id @default(autoincrement())
   name      String @unique
@@ -54,6 +62,7 @@ model Item {
   recipes     Recipe[] // Receptury, które tworzą ten item
   ingredients RecipeIngredient[] // Receptury, w których ten item jest składnikiem
   bank        BankMaterial[]
+  bank_item   BankItem[]
 }
 
 model Recipe {
