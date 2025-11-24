@@ -26,7 +26,11 @@ export const GET = async (req: NextRequest, ctx: Context) => {
                     item: true
                 }
             },
-            output_item: true
+            output_item: {
+                include: {
+                    rarity: true
+                }
+            }
         }
     })
 
