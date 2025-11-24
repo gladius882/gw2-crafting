@@ -11,9 +11,10 @@ type Context = {
 export const GET = async (req: NextRequest, ctx: Context) => {
 
     const prisma = new PrismaClient();
+    const params = await ctx.params;
 
     const recipe = await prisma.recipe.findFirst({
-        where: { output_item_id: ctx.params.item_id },
+        where: { output_item_id: parseInt(params.item_id.toString()) },
         include: {
             disciplines: {
                 include: {
