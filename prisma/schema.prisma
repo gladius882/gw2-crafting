@@ -55,6 +55,7 @@ model Item {
   chat_link    String?
   icon         String?
   gw2_id       Int     @unique
+  is_wishlised Boolean @default(false)
 
   rarity_id Int
   rarity    Rarity @relation(fields: [rarity_id], references: [id])
