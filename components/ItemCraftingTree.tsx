@@ -29,17 +29,22 @@ export function ItemCraftingTree({ node, hide_base_item }: { node: RecipeNode, h
             <div className="ml-6 mt-1">
                 {recipe.ingredients.map((ing, index) => (
                     <div key={index} className="mt-1">
-                        <div className="flex gap-2 items-center text-sm">
-                            <img src={ing.item.icon ?? ''} className="w-12 h-12" />
-                            <span style={{
-                                color: ing.item.rarity.color
-                            }}>{ing.item.name} × {ing.count}</span>
+                        <a href={`/crafting/${ing.item.id}`}>
+                            <div className="flex gap-2 items-center text-sm">
+                                <img src={ing.item.icon ?? ''} className="w-12 h-12" style={{
+                                    borderWidth: '1px',
+                                    borderColor: (ing.item.bank[0]?.count ?? 0) >= ing.count ? "green" : "red"
+                                }} />
+                                <span style={{
+                                    color: ing.item.rarity.color
+                                }}>{ing.item.name} × {ing.count}</span>
 
-                            <span>{ing.item.bank[0]?.count ?? 0} / {ing.count}</span>
-                        </div>
+                                <span>{ing.item.bank[0]?.count ?? 0} / {ing.count}</span>
+                            </div>
+                        </a>
 
                         {children[index] && (
-                            <ItemCraftingTree node={children[index]!} hide_base_item={true}/>
+                            <ItemCraftingTree node={children[index]!} hide_base_item={true} />
                         )}
                     </div>
                 ))}
