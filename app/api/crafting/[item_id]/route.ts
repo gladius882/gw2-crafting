@@ -23,7 +23,7 @@ async function getRecipeTree(recipeId: number, depth = 0, maxDepth = 5) {
             },
             ingredients: {
                 include: { item: { include: {
-                    bank: true, rarity: true
+                    bank: true, rarity: true, bank_item: true
                 } } }
             },
             disciplines: {

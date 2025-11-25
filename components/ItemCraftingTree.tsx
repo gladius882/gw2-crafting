@@ -19,7 +19,9 @@ export function ItemCraftingTree({ node, hide_base_item }: { node: RecipeNode, h
                         alt={recipe.output_item?.name ?? ''}
                         className="w-14 h-14"
                     />
-                    <span className="font-medium">{recipe.output_item?.name}</span>
+                    <span className="font-medium" style={{
+                        color: recipe.output_item.rarity.color
+                    }}>{recipe.output_item?.name}</span>
                     <span className="text-xs text-gray-500">({recipe.ingredients.length} ingredients)</span>
                 </div>
             )}
@@ -29,7 +31,11 @@ export function ItemCraftingTree({ node, hide_base_item }: { node: RecipeNode, h
                     <div key={index} className="mt-1">
                         <div className="flex gap-2 items-center text-sm">
                             <img src={ing.item.icon ?? ''} className="w-12 h-12" />
-                            <span>{ing.item.name} × {ing.count}</span>
+                            <span style={{
+                                color: ing.item.rarity.color
+                            }}>{ing.item.name} × {ing.count}</span>
+
+                            <span>{ing.item.bank[0]?.count ?? 0} / {ing.count}</span>
                         </div>
 
                         {children[index] && (
