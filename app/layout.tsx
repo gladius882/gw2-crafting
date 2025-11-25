@@ -27,6 +27,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+
+        <div className="w-full flex justify-center item-center gap-5 py-2 shadow-sm shadow-white bg-gray-950">
+
+          <div className="h-max w-1/2 flex">
+            <input type="text" className="border border-gray-300 w-full p-2 text-gray-300" placeholder="Search item..." />
+            <button className="p-2 bg-amber-800 border border-amber-800 text-white">🔍</button>
+          </div>
+        </div>
+
         {children}
       </body>
     </html>
