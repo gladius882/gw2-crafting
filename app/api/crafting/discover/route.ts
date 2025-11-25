@@ -1,0 +1,31 @@
+import { PrismaClient } from "@/prisma/prisma/generated/client";
+import { NextRequest, NextResponse } from "next/server";
+
+const prisma = new PrismaClient();
+
+export const GET = async (req: NextRequest) => {
+
+    const undiscovered = await prisma.recipe.findMany({
+        where: { 
+            discovered: false,
+        },
+        include: {
+            output_item: {
+                include: {
+                    rarity: true,
+                }
+            },
+            disciplines: true,
+        }
+    })
+
+
+
+
+    return NextResponse.json(undiscovered.map((u) => {
+        return {
+            ...(u.output_item),
+            min_rating: u.min_rating
+        }
+    }))
+}
