@@ -35,6 +35,7 @@ model Rarity {
   name      String @unique
   min_level Int?
   max_level Int?
+  color     String?
 
   items Item[]
 }
