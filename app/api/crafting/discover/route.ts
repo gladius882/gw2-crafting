@@ -15,8 +15,13 @@ export const GET = async (req: NextRequest) => {
                     rarity: true,
                 }
             },
-            disciplines: true,
-        }
+            disciplines: {
+                include: {
+                    discipline: true
+                }
+            }
+        },
+        take: 20
     })
 
 
@@ -25,7 +30,8 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json(undiscovered.map((u) => {
         return {
             ...(u.output_item),
-            min_rating: u.min_rating
+            min_rating: u.min_rating,
+            disciplines: u.disciplines
         }
     }))
 }
