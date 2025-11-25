@@ -43,6 +43,7 @@ model Rarity {
 model Discipline {
   id   Int    @id @default(autoincrement())
   name String @unique
+  icon String?
 
   recipes RecipeDiscipline[]
 }
