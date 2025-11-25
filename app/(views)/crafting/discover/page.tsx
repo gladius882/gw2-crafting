@@ -7,9 +7,6 @@ export default async function DiscoverPage() {
 
     return (
         <div>
-            <div>
-                {JSON.stringify(toDiscover[0])}
-            </div>
 
             {toDiscover.map(item => {
                 return (
@@ -26,7 +23,10 @@ export default async function DiscoverPage() {
                             <div className="flex gap-5">
                                 {item.disciplines.map(d => {
                                     return (
-                                        <div key={d.discipline.id}>
+                                        <div key={d.discipline.id} className="flex items-center">
+                                            {d.discipline.icon && (
+                                                <img src={d.discipline.icon} alt={d.discipline.name} className="w-8 h-8" />
+                                            )}
                                             {d.discipline.name}
                                         </div>
                                     )
