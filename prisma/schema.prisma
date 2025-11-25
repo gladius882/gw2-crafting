@@ -76,6 +76,7 @@ model Recipe {
   time_to_craft     Int     @default(1000)
   min_rating        Int
   chat_link         String?
+  discovered        Boolean @default(false)
   gw2_id            Int     @unique
 
   ingredients RecipeIngredient[]
