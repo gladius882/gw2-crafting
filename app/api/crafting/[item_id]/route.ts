@@ -15,7 +15,12 @@ async function getRecipeTree(recipeId: number, depth = 0, maxDepth = 5) {
     const recipe = await prisma.recipe.findUnique({
         where: { id: recipeId },
         include: {
-            output_item: true,
+            output_item: {
+                include: {
+                    bank: true,
+                    rarity: true
+                }
+            },
             ingredients: {
                 include: { item: { include: {
                     bank: true, rarity: true
