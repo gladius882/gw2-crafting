@@ -8,6 +8,8 @@ export default async function DiscoverPage() {
     return (
         <div>
 
+            <h1 className="text-lg">Discover recipes</h1>
+
             {toDiscover.map(item => {
                 return (
                     <div key={item.id} className="flex gap-5 mb-5">
