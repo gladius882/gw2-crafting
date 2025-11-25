@@ -1,6 +1,7 @@
 import { PrismaClient } from "@/prisma/prisma/generated/client";
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
+
+const prisma = new PrismaClient();
 
 type Context = {
     params: {
@@ -8,44 +9,63 @@ type Context = {
     }
 }
 
+async function getRecipeTree(recipeId: number, depth = 0, maxDepth = 5) {
+    if (depth > maxDepth) return null;
+
+    const recipe = await prisma.recipe.findUnique({
+        where: { id: recipeId },
+        include: {
+            output_item: true,
+            ingredients: {
+                include: { item: { include: {
+                    bank: true, rarity: true
+                } } }
+            },
+            disciplines: {
+                include: { discipline: true }
+            }
+        }
+    });
+
+    if (!recipe) return null;
+
+    // Pobierz dzieci (receptury składników)
+    const children = [];
+    for (const ing of recipe.ingredients) {
+        const childRecipe = await prisma.recipe.findFirst({
+            where: { output_item_id: ing.item_id }
+        });
+
+        if (childRecipe) {
+            children.push(await getRecipeTree(childRecipe.id, depth + 1, maxDepth));
+        } else {
+            children.push(null);
+        }
+    }
+
+    return {
+        recipe,
+        children
+    };
+}
+
 export const GET = async (req: NextRequest, ctx: Context) => {
 
-    const prisma = new PrismaClient();
     const params = await ctx.params;
 
     const recipe = await prisma.recipe.findFirst({
-        where: { output_item_id: parseInt(params.item_id.toString()) },
-        include: {
-            disciplines: {
-                include: {
-                    discipline: true
-                }
-            },
-            ingredients: {
-                include: {
-                    item: true
-                }
-            },
-            output_item: {
-                include: {
-                    rarity: true
-                }
-            }
-        }
+        where: { output_item_id: parseInt(params.item_id.toString()) }
     })
 
-    return NextResponse.json({
-        output_item: {
-            ...recipe?.output_item,
-            count: recipe?.output_item_count,
-            min_rating: recipe?.min_rating
-        },
-        ingredients: recipe?.ingredients.map(ingredient => {
-            return {
-                ...ingredient.item,
-                count: ingredient.count,
-            }
-        }),
-        disciplines: recipe?.disciplines.map(d => d.discipline.name)
-    })
+    if (recipe === null) {
+        return NextResponse.json({
+            error: true,
+            message: `Not found item with id ${params.item_id}`
+        }, { status: 404 })
+    }
+
+    const recipeTree = await getRecipeTree(recipe.id);
+
+
+    return NextResponse.json(recipeTree)
 }
