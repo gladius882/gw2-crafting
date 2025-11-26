@@ -8,6 +8,13 @@ export const GET = async (req: NextRequest) => {
     const undiscovered = await prisma.recipe.findMany({
         where: { 
             discovered: false,
+            disciplines: {
+                some: {
+                    discipline: {
+                        name: "Artificer"
+                    }
+                }
+            }
         },
         include: {
             output_item: {
@@ -21,7 +28,10 @@ export const GET = async (req: NextRequest) => {
                 }
             }
         },
-        take: 20
+        take: 20,
+        orderBy: {
+            min_rating: "desc"
+        }
     })
 
 
