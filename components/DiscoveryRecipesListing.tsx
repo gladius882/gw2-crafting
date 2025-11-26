@@ -8,22 +8,60 @@ type Props = {
     rarities: Rarity[]
 }
 
+type DiscoveryFilters = {
+    discipline?: string,
+    rarity?: string,
+    min_rating?: number,
+    max_rating?: number,
+    sort_by?: string,
+    sort_order?: string,
+    item?: string
+}
+
 export default function DiscoveryRecipesListing(props: Props) {
 
+    const [isLoading, setIsLoading] = useState(false);
     const [recipes, setRecipes] = useState([])
+    const [filters, setFilters] = useState<DiscoveryFilters>({})
 
     const handleSearchClick = () => {
+        setIsLoading(true)
 
+        let params = '?';
+        if(filters.discipline) params += `discipline=${filters.discipline}&`;
+        if(filters.rarity) params += `rarity=${filters.rarity}&`;
+        if(filters.min_rating !== undefined) params += `min_rating=${filters.min_rating}&`;
+        if(filters.max_rating !== undefined) params += `max_rating=${filters.max_rating}&`;
+        if(filters.sort_by) params += `sort_by=${filters.sort_by}&`;
+        if(filters.sort_order) params += `sort_order=${filters.sort_order}&`;
+        if(filters.item) params += `item=${filters.item}`;
+
+        console.log(params);
+
+        fetch(`http://localhost:3000/api/crafting/discover${params}`)
+            .then((data) => {
+                data.json()
+                    .then((data) => setRecipes(data.data))
+            })
+            .catch((err) => {
+                console.log(err);
+                alert('error');
+            })
+            .finally(() => setIsLoading(false))
     }
 
     return (
         <div className="w-full flex flex-col gap-5">
 
-            <div className="grid grid-cols-2 gap-x-10 gap-y-2">
+            <div>
+                {JSON.stringify(filters)}
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-10 gap-y-2">
                 <div>
                     <div>Discipline</div>
-                    <select className="w-full p-2 bg-black">
-                        <option value={0}>Any</option>
+                    <select className="w-full p-2 bg-black" onChange={(event) => setFilters({ ...filters, discipline: event.target.value })}>
+                        <option value="%">Any</option>
                         {props.disciplines.map(d => {
                             return (
                                 <option key={d.id} value={d.name}>
@@ -36,8 +74,8 @@ export default function DiscoveryRecipesListing(props: Props) {
 
                 <div>
                     <div>Rarity</div>
-                    <select className="w-full p-2 bg-black">
-                        <option>Any</option>
+                    <select className="w-full p-2 bg-black" onChange={(event) => setFilters({ ...filters, rarity: event.target.value })}>
+                        <option value="%">Any</option>
                         {props.rarities.map(r => {
                             return <option key={r.id} value={r.name} style={{
                                 color: r.color
@@ -48,26 +86,33 @@ export default function DiscoveryRecipesListing(props: Props) {
 
                 <div>
                     <div>Min rating</div>
-                    <input type="number" defaultValue={0} min={0} max={500} className="px-2 border border-white w-full" />
+                    <input type="number"
+                        defaultValue={0} min={0} max={500}
+                        className="px-2 border border-white w-full"
+                        onChange={(event) => setFilters({ ...filters, min_rating: parseInt(event.target.value) })}
+                    />
                 </div>
 
                 <div>
                     <div>Max rating</div>
-                    <input type="number" defaultValue={500} min={0} max={500} className="px-2 border border-white w-full" />
+                    <input type="number"
+                        defaultValue={500} min={0} max={500}
+                        className="px-2 border border-white w-full"
+                        onChange={(event) => setFilters({ ...filters, max_rating: parseInt(event.target.value) })}
+                    />
                 </div>
 
                 <div>
                     <div>Sort by</div>
-                    <select className="w-full p-2 bg-black">
-                        <option value="">Minimal rating</option>
-                        <option value="">Discipline</option>
-                        <option value="">Item name</option>
+                    <select className="w-full p-2 bg-black" onChange={(event) => setFilters({ ...filters, sort_by: event.target.value })}>
+                        <option value="min_rating">Minimal rating</option>
+                        <option value="type">Item type</option>
                     </select>
                 </div>
 
                 <div>
                     <div>Sort order</div>
-                    <select className="w-full p-2 bg-black">
+                    <select className="w-full p-2 bg-black" onChange={(event) => setFilters({ ...filters, sort_order: event.target.value })}>
                         <option value="asc">Ascending</option>
                         <option value="desc">Descending</option>
                     </select>
@@ -75,7 +120,10 @@ export default function DiscoveryRecipesListing(props: Props) {
 
                 <div>
                     <div>Find in item name</div>
-                    <input type="text" className="p-2 border border-white w-full" />
+                    <input type="text" 
+                        className="p-2 border border-white w-full" 
+                        onChange={(event) => setFilters({ ...filters, item: event.target.value })} 
+                    />
                 </div>
             </div>
 
@@ -89,6 +137,10 @@ export default function DiscoveryRecipesListing(props: Props) {
                 <div>
                     No recipes
                 </div>
+            )}
+
+            {isLoading && (
+                <div>Fetching data...</div>
             )}
 
             {recipes.map(item => {
