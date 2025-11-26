@@ -19,7 +19,11 @@ export default async function DiscoverPage() {
 
                         <div>
                             <div>
-                                <a href={`/crafting/${item.id}`}>{item.name} ({item.min_rating})</a>
+                                <a href={`/crafting/${item.id}`}>
+                                    <span style={{
+                                        color: item.rarity.color
+                                    }}>{item.name}</span> ({item.min_rating})
+                                </a>
                             </div>
 
                             <div className="flex gap-5">
