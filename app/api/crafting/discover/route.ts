@@ -19,32 +19,34 @@ export const GET = async (req: NextRequest) => {
 
     const undiscovered = await prisma.recipe.findMany({
         where: {
-            discovered: false,
-            disciplines: {
-                some: {
-                    discipline: {
-                        name: {
-                            mode: "insensitive",
-                            contains: params.discipline_name
+            AND: {
+                discovered: false,
+                disciplines: {
+                    some: {
+                        discipline: {
+                            name: {
+                                mode: "insensitive",
+                                contains: params.discipline_name
+                            }
                         }
                     }
-                }
-            },
-            output_item: {
-                name: {
-                    mode: "insensitive",
-                    contains: params.item_name
                 },
-                rarity: {
+                output_item: {
                     name: {
                         mode: "insensitive",
-                        contains: params.rarity_name
+                        contains: params.item_name
+                    },
+                    rarity: {
+                        name: {
+                            mode: "insensitive",
+                            contains: params.rarity_name
+                        }
                     }
+                },
+                min_rating: {
+                    gt: parseInt(params.min_rating.toString()),
+                    lt: parseInt(params.max_rating.toString())
                 }
-            },
-            min_rating: {
-                gt: parseInt(params.min_rating.toString()),
-                lt: parseInt(params.max_rating.toString())
             }
         },
         include: {
@@ -63,7 +65,8 @@ export const GET = async (req: NextRequest) => {
         skip: parseInt(params.offset.toString()),
         orderBy: {
             [params.sort_by]: params.sort_order
-        }
+        },
+        
     })
 
     return NextResponse.json({
