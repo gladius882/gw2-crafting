@@ -27,18 +27,21 @@ export default function DiscoveryRecipesListing(props: Props) {
     const handleSearchClick = () => {
         setIsLoading(true)
 
-        let params = '?';
-        if(filters.discipline) params += `discipline=${filters.discipline}&`;
-        if(filters.rarity) params += `rarity=${filters.rarity}&`;
+        let params = '?limit=50000&';
+        if(filters.discipline !== undefined) params += `discipline=${filters.discipline}&`;
+        if(filters.rarity !== undefined) params += `rarity=${filters.rarity}&`;
         if(filters.min_rating !== undefined) params += `min_rating=${filters.min_rating}&`;
         if(filters.max_rating !== undefined) params += `max_rating=${filters.max_rating}&`;
-        if(filters.sort_by) params += `sort_by=${filters.sort_by}&`;
-        if(filters.sort_order) params += `sort_order=${filters.sort_order}&`;
-        if(filters.item) params += `item=${filters.item}`;
+        if(filters.sort_by !== undefined) params += `sort_by=${filters.sort_by}&`;
+        if(filters.sort_order !== undefined) params += `sort_order=${filters.sort_order}&`;
+        if(filters.item !== undefined) params += `item=${filters.item}`;
 
         console.log(params);
+        console.log(`http://localhost:3000/api/crafting/discover${params}`);
 
-        fetch(`http://localhost:3000/api/crafting/discover${params}`)
+        fetch(`http://localhost:3000/api/crafting/discover${params}`, {
+            cache: "no-cache"
+        })
             .then((data) => {
                 data.json()
                     .then((data) => setRecipes(data.data))
@@ -129,7 +132,7 @@ export default function DiscoveryRecipesListing(props: Props) {
 
             <div>
                 <button className="p-2 border border-white rounded-md" onClick={() => handleSearchClick()}>
-                    Find undiscovered recipes
+                    Find undiscovered recipes ({recipes.length})
                 </button>
             </div>
 
@@ -145,7 +148,7 @@ export default function DiscoveryRecipesListing(props: Props) {
 
             {recipes.map(item => {
                 return (
-                    <div key={item.id} className="flex gap-5 mb-5">
+                    <div key={item.disciplines[0].recipe_id} className="flex gap-5 mb-5">
                         <div>
                             <img className="w-14 h-14" src={item.icon} alt={item.name} />
                         </div>
@@ -155,7 +158,7 @@ export default function DiscoveryRecipesListing(props: Props) {
                                 <a href={`/crafting/${item.id}`}>
                                     <span style={{
                                         color: item.rarity.color
-                                    }}>{item.name}</span> ({item.min_rating})
+                                    }}>#{item.id} {item.name}</span> ({item.min_rating})
                                 </a>
                             </div>
 
