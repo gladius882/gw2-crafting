@@ -9,9 +9,6 @@ export default async function DiscoverPage() {
     const disciplines = await prisma.discipline.findMany();
     const rarities = await prisma.rarity.findMany();
 
-    const res = await fetch('http://localhost:3000/api/crafting/discover');
-    const toDiscover = await res.json();
-
     return (
         <div>
 
