@@ -44,8 +44,8 @@ export const GET = async (req: NextRequest) => {
                     }
                 },
                 min_rating: {
-                    gt: parseInt(params.min_rating.toString()),
-                    lt: parseInt(params.max_rating.toString())
+                    gte: parseInt(params.min_rating.toString()),
+                    lte: parseInt(params.max_rating.toString()),
                 }
             }
         },
