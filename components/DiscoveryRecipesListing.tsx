@@ -22,7 +22,15 @@ export default function DiscoveryRecipesListing(props: Props) {
 
     const [isLoading, setIsLoading] = useState(false);
     const [recipes, setRecipes] = useState([])
-    const [filters, setFilters] = useState<DiscoveryFilters>({})
+    const [filters, setFilters] = useState<DiscoveryFilters>({
+        discipline: "%",
+        rarity: "%",
+        min_rating: 0,
+        max_rating: 500,
+        sort_by: "min_rating",
+        sort_order: "asc",
+        item: "%"
+    })
 
     const handleSearchClick = () => {
         setIsLoading(true)
@@ -56,16 +64,12 @@ export default function DiscoveryRecipesListing(props: Props) {
     return (
         <div className="w-full flex flex-col gap-5">
 
-            <div>
-                {JSON.stringify(filters)}
-            </div>
-
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-10 gap-y-2">
                 <div>
                     <div>Discipline</div>
-                    <select className="w-full p-2 bg-black" onChange={(event) => setFilters({ ...filters, discipline: event.target.value })}>
+                    <select className="w-full p-2 bg-black" value={filters.discipline} onChange={(event) => setFilters({ ...filters, discipline: event.target.value })}>
                         <option value="%">Any</option>
-                        {props.disciplines.map(d => {
+                        {props.disciplines.toSorted((a, b) => a.name.localeCompare(b.name)).map(d => {
                             return (
                                 <option key={d.id} value={d.name}>
                                     {d.name}
@@ -77,7 +81,7 @@ export default function DiscoveryRecipesListing(props: Props) {
 
                 <div>
                     <div>Rarity</div>
-                    <select className="w-full p-2 bg-black" onChange={(event) => setFilters({ ...filters, rarity: event.target.value })}>
+                    <select className="w-full p-2 bg-black" value={filters.rarity} onChange={(event) => setFilters({ ...filters, rarity: event.target.value })}>
                         <option value="%">Any</option>
                         {props.rarities.map(r => {
                             return <option key={r.id} value={r.name} style={{
@@ -90,7 +94,8 @@ export default function DiscoveryRecipesListing(props: Props) {
                 <div>
                     <div>Min rating</div>
                     <input type="number"
-                        defaultValue={0} min={0} max={500}
+                        value={filters.min_rating} 
+                        min={0} max={500}
                         className="px-2 border border-white w-full"
                         onChange={(event) => setFilters({ ...filters, min_rating: parseInt(event.target.value) })}
                     />
@@ -99,7 +104,8 @@ export default function DiscoveryRecipesListing(props: Props) {
                 <div>
                     <div>Max rating</div>
                     <input type="number"
-                        defaultValue={500} min={0} max={500}
+                        defaultValue={filters.max_rating} 
+                        min={0} max={500}
                         className="px-2 border border-white w-full"
                         onChange={(event) => setFilters({ ...filters, max_rating: parseInt(event.target.value) })}
                     />
@@ -107,7 +113,7 @@ export default function DiscoveryRecipesListing(props: Props) {
 
                 <div>
                     <div>Sort by</div>
-                    <select className="w-full p-2 bg-black" onChange={(event) => setFilters({ ...filters, sort_by: event.target.value })}>
+                    <select className="w-full p-2 bg-black" value={filters.sort_by} onChange={(event) => setFilters({ ...filters, sort_by: event.target.value })}>
                         <option value="min_rating">Minimal rating</option>
                         <option value="type">Item type</option>
                     </select>
@@ -115,7 +121,7 @@ export default function DiscoveryRecipesListing(props: Props) {
 
                 <div>
                     <div>Sort order</div>
-                    <select className="w-full p-2 bg-black" onChange={(event) => setFilters({ ...filters, sort_order: event.target.value })}>
+                    <select className="w-full p-2 bg-black" value={filters.sort_order} onChange={(event) => setFilters({ ...filters, sort_order: event.target.value })}>
                         <option value="asc">Ascending</option>
                         <option value="desc">Descending</option>
                     </select>
@@ -124,6 +130,7 @@ export default function DiscoveryRecipesListing(props: Props) {
                 <div>
                     <div>Find in item name</div>
                     <input type="text" 
+                        value={filters.item}
                         className="p-2 border border-white w-full" 
                         onChange={(event) => setFilters({ ...filters, item: event.target.value })} 
                     />
